@@ -1,0 +1,101 @@
+/**
+ *Materia: Teoria Computacional
+ * @author Karen Castillo Aguilar 
+ * Matricula: 140048
+ * 
+ * 
+ * 
+ * Expresión regular a programar  1(00*)* AFD 
+ * El automata de dicha expresión cuenta con 4 estados (q0, q1, q2 y q3), en los cuales se evalua la cadena
+ * 
+ * La logica que se siguio, se basa en el codigo de automata previamente proporcionado, sin embargo
+ * se modificaron las las llamadas a los metodos segun corresponda, por ejemplo la cadena debe comenzar siempre 
+ * con un uno, de no ser asi, se termina el proceso y se evalua como invalida
+ * 
+ */
+public class Automata {
+    int cont;
+    char [] car;
+    boolean acepta;
+   
+    
+    public static void main(String[] args) {
+    //instanciamos     
+        Automata aut = new Automata();
+        String cadena = "100";  //En esta parte se reemplaza la cadena a evaluar
+        aut.car = cadena.toCharArray();
+        aut.inicio();
+        if(aut.acepta){             //condicional para aceptación de la cadena
+            System.out.println("Cadena VALIDA"); 
+        }else{
+            System.out.println("Cadena INVALIDA");
+        }
+    }
+    
+    public void inicio(){
+        cont = 0; //se inicializa el contador para evaluar la posicion del caracter en la cadena
+        acepta = false;  //se inicializa en false, ya que aun no es aceptada
+        q0(); // se comienza por el estado inicial, llamando al metodo q0
+    }
+    //se valida la cadena en q0
+    public void q0(){
+        System.out.println("q0"); //imprime al entrar al estado q0
+        if (cont < car.length) { 
+            if(car[cont] == '1'){  //si el primer caracter es 1, continua su curso, incrementa el contador y envia a q1
+                cont++;
+                q1();
+            }else if(car[cont] == '0'){
+                cont++;  //si el primer caracter es 0, termina y es invalida
+                qerr();
+            }
+        }
+    }
+    //se valida la cadena en q1
+    public void q1(){   //El metodo es igual al anterior
+        System.out.println("q1");
+        if(cont < car.length){  
+            if(car[cont] == '0'){  //el sig caracter debe ser 0 por lo tanto si lo es, continua a q2
+                cont++;
+                q2();
+            }else if(car[cont] == '1'){ //si es un 1, envia al metodo error y evalua invalida
+                cont++;
+                qerr();
+            }
+        }
+    }
+    //se valida la cadena en q2
+    public void q2(){    //el metodo es igual que los anteriores
+        System.out.println("q2");
+        if(cont < car.length){
+            if(car[cont] == '0'){
+                cont++;
+                q3();
+            }else if(car[cont] == '1'){
+                cont++;
+                qerr();
+            }
+        }
+    }
+    //se valida la cadena en q3
+    public void q3(){ //La logica de este estado es igual a los anteriores
+        System.out.println("q3");        
+        acepta = true;
+        if(cont < car.length){
+            if(car[cont] == '0'){ //al ser 0* , puede caer en un ciclo y aceptar 0 infinitos, por lo que si contiene un 0, vuelve a entrar al mismo estado
+                cont++;
+                q3();
+            }else if(car[cont] == '1'){ //si termina en 1, marca cadena invalida invocando el metodo error
+                cont++;
+                qerr(); //si la cadena no cumple manda llamar el error
+            }
+        }
+    }
+    
+    //envia el error
+    public void qerr(){
+        acepta = false;  //en este metodo se evalua la variable acepta como falsa 
+        return; // regresa el resultado
+    }
+    
+    
+}
